@@ -1,3 +1,4 @@
+
 export function Rater(ratingElement) {
     const stars = ratingElement.querySelectorAll('.star');
 
@@ -27,10 +28,6 @@ export function Rater(ratingElement) {
 
     resetRating();
 
-    // stars.forEach(star => {
-    //     star.addEventListener('mouseover', ratingHover);
-    // });
-
     stars.forEach(star => {
         star.addEventListener('click', setRating);
         star.addEventListener('mouseover', ratingHover);
@@ -38,3 +35,24 @@ export function Rater(ratingElement) {
 
     ratingElement.addEventListener('mouseout', resetRating);
 }
+
+// fetch("template/rater.html")
+//     .then(stream => stream.text())
+//     .then(text => console.log(text))
+
+export class RaterClass extends HTMLElement {
+
+    constructor() {
+        super();
+    }
+
+    async connectedCallback() {
+
+        let res = await fetch('template/rater.html');
+
+        this.attachShadow({mode: 'open'})
+            .innerHTML = await res.text();
+    }
+}
+
+window.customElements.define('star-rater', RaterClass)
