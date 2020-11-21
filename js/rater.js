@@ -36,10 +36,6 @@ export function Rater(ratingElement) {
     ratingElement.addEventListener('mouseout', resetRating);
 }
 
-// fetch("template/rater.html")
-//     .then(stream => stream.text())
-//     .then(text => console.log(text))
-
 export class RaterClass extends HTMLElement {
 
     constructor() {
@@ -47,11 +43,17 @@ export class RaterClass extends HTMLElement {
     }
 
     async connectedCallback() {
+        const res = await fetch('template/rater.html');
 
-        let res = await fetch('template/rater.html');
+        const parser = new DOMParser();
 
-        this.attachShadow({mode: 'open'})
-            .innerHTML = await res.text();
+        const doc = parser.parseFromString(await res.text(), 'text/html');
+        const templateContent = doc.querySelector('template').content;
+
+        const customElement = document.getElementsByTagName('star-rater')[0];
+
+        customElement.attachShadow({  mode: 'open' })
+            .appendChild(templateContent.cloneNode(true))
     }
 }
 
